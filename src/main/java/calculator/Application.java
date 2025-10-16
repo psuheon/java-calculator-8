@@ -3,31 +3,28 @@ package calculator;
 import camp.nextstep.edu.missionutils.Console;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 
 public class Application {
 
     // 유저가 입력한 문자열을 구분자를 기준으로 하여 숫자들로 나누는 함수
-    public ArrayList<String> splitString(String str, char separator) {
+    public ArrayList<String> splitString(String str, char customSeparator) {
         ArrayList<String> separated = new ArrayList<String>();
+        ArrayList<Character> separator = new ArrayList<>(Arrays.asList(',', ':'));
         int currentIndex = 0;
-        int numCount = 0;
 
-        if(separator == ' ') {
-            for(int i = 0; i < str.length(); i++) {
-                if(str.charAt(i) == ',' || str.charAt(i) == ':') {
-                    separated.add(str.substring(currentIndex, i));
-                    numCount++;
-                    currentIndex = i + 1;
-                }
-            }
-        }
-        else {
+        if (customSeparator != ' ') {
+            separator.add(customSeparator);
             currentIndex = 5;
-            for(int i = 5; i < str.length(); i++) {
-                if(str.charAt(i) == separator) {
+        }
+
+        for(int i = currentIndex; i < str.length(); i++) {
+            for(char c : separator) {
+                if(str.charAt(i) == c) {
                     separated.add(str.substring(currentIndex, i));
-                    numCount++;
                     currentIndex = i + 1;
+
+                    break;
                 }
             }
         }
@@ -66,6 +63,7 @@ public class Application {
             ArrayList<String> numList = calculator.splitString(userInput, userInput.charAt(2));
             result = calculator.calculate(numList);
         }
+        System.out.println(result);
 
         Console.close();
     }
