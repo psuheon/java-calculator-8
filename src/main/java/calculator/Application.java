@@ -2,19 +2,20 @@ package calculator;
 
 import camp.nextstep.edu.missionutils.Console;
 
+import java.awt.*;
 import java.util.ArrayList;
 import java.util.Arrays;
 
 public class Application {
 
     // 유저가 입력한 문자열을 구분자를 기준으로 하여 숫자들로 나누는 함수
-    public ArrayList<String> splitString(String str, char customSeparator) {
+    public ArrayList<String> splitString(String str) {
         ArrayList<String> separated = new ArrayList<String>();
         ArrayList<Character> separator = new ArrayList<>(Arrays.asList(',', ':'));
         int currentIndex = 0;
 
-        if (customSeparator != ' ') {
-            separator.add(customSeparator);
+        if (checkCustomSeparator(str)) {
+            separator.add(str.charAt(2));
             currentIndex = 5;
         }
 
@@ -44,6 +45,13 @@ public class Application {
         return value;
     }
 
+    public Boolean checkCustomSeparator(String str) {
+        if(Character.isDigit(str.charAt(0)))
+            return Boolean.FALSE;
+        else
+            return Boolean.TRUE;
+    }
+
     public static void main(String[] args) {
         Application calculator = new Application();
 
@@ -55,12 +63,8 @@ public class Application {
         if(userInput == "") {
             result = 0.0;
         }
-        else if(Character.isDigit(userInput.charAt(0))) {
-            ArrayList<String> numList = calculator.splitString(userInput, ' ');
-            result = calculator.calculate(numList);
-        }
         else {
-            ArrayList<String> numList = calculator.splitString(userInput, userInput.charAt(2));
+            ArrayList<String> numList = calculator.splitString(userInput);
             result = calculator.calculate(numList);
         }
         System.out.println(result);
