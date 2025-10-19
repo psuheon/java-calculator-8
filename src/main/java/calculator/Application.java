@@ -52,13 +52,75 @@ public class Application {
             return Boolean.TRUE;
     }
 
-    public static void main(String[] args) {
+    public void checkIllegalInput(String input) {
+        int startIndex = 0;
+        ArrayList<Character> separator = new ArrayList<>(Arrays.asList(',', ':'));
+
+        if(!Character.isDigit(input.charAt(0))) {
+            if (input.startsWith("//")) {
+                if(!input.contains("\\n")) // 커스텀 구분자 지정 포맷 오류
+                    throw new IllegalArgumentException("잘못된 입력입니다.");
+                else {
+                    if(input.indexOf("\\n") != 3) // 커스텀 구분자가 하나가 아닌 경우
+                        throw new IllegalArgumentException("잘못된 입력입니다.");
+                }
+
+                if(input.charAt(2) == '.') // "."을 커스텀 구분자로 지정한 경우
+                    throw new IllegalArgumentException("잘못된 입력입니다.");
+            }
+            else // 숫자가 아닌 문자로 시작하거나 커스텀 구분자 지정 포맷 오류
+                throw new IllegalArgumentException("잘못된 입력입니다.");
+
+            startIndex = 5;
+            separator.add(input.charAt(2));
+        }
+
+        if(!Character.isDigit(input.charAt(input.length() - 1))) // 숫자가 아닌 문자로 문자열이 끝나는 경우
+            throw new IllegalArgumentException("잘못된 입력입니다.");
+
+        int floatingPoint = 0;
+        for(int i = startIndex; i < input.length(); i++) {
+            char current = input.charAt(i);
+            if(!Character.isDigit(current)) {
+                if(current =='.') {
+                    if(floatingPoint == 0) {
+                        floatingPoint = 1;
+                    }
+                    else { //'.' 문자가 floating point가 너무 많은 경우
+                        throw new IllegalArgumentException("잘못된 입력입니다.");
+                    }
+                }
+                else {
+                    int isSeparator = 0;
+                    for(Character c : separator) {
+                        if(current == c) {
+                            isSeparator = 1;
+                            floatingPoint = 0;
+                        }
+                    }
+
+                    if(isSeparator == 0) { // 지정된 구분자가 아닌 다른 문자가 사용된 경우
+                        throw new IllegalArgumentException("잘못된 입력입니다.");
+                    }
+                    else {
+                        if(!Character.isDigit(input.charAt(i + 1))) { // 구분자 뒤에 숫자가 아닌 문자가 오는 경우
+                            throw new IllegalArgumentException("잘못된 입력입니다.");
+                        }
+                    }
+                }
+            }
+        }
+
+    }
+    public static void main(String[] args) throws IllegalArgumentException {
         Application calculator = new Application();
 
         String userInput;
         Double result;
 
         userInput = Console.readLine();
+
+        calculator.checkIllegalInput(userInput);
 
         if(userInput == "") {
             result = 0.0;
