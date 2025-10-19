@@ -35,8 +35,8 @@ public class Application {
     }
 
     // String 형식으로 된 숫자들을 Double 형식으로 바꾸어 더하는 함수
-    public Double calculate(ArrayList<String> nList) {
-        Double value = 0.0;
+    public double calculate(ArrayList<String> nList) {
+        double value = 0.0;
         for(int i = 0; i < nList.size(); i++) {
             String temp = nList.get(i);
             value += Double.parseDouble(temp);
@@ -116,7 +116,7 @@ public class Application {
         Application calculator = new Application();
 
         String userInput;
-        Double result;
+        double result;
 
         userInput = Console.readLine();
 
@@ -129,7 +129,13 @@ public class Application {
             ArrayList<String> numList = calculator.splitString(userInput);
             result = calculator.calculate(numList);
         }
-        System.out.println(result);
+
+        if(result % 1 == 0.0) {
+            System.out.println("결과 : " + (int)result);
+        }
+        else {
+            System.out.println("결과 : " + result);
+        }
 
         Console.close();
     }
