@@ -3,6 +3,7 @@ package calculator;
 import camp.nextstep.edu.missionutils.Console;
 
 import java.awt.*;
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Arrays;
 
@@ -35,14 +36,15 @@ public class Application {
     }
 
     // String 형식으로 된 숫자들을 Double 형식으로 바꾸어 더하는 함수
-    public double calculate(ArrayList<String> nList) {
-        double value = 0.0;
-        for(int i = 0; i < nList.size(); i++) {
-            String temp = nList.get(i);
-            value += Double.parseDouble(temp);
+    public BigDecimal calculate(ArrayList<String> nList) {
+        BigDecimal sum = BigDecimal.ZERO;
+
+        for(String str : nList) {
+            BigDecimal bd = new BigDecimal(str);
+            sum = sum.add(bd);
         }
 
-        return value;
+        return sum;
     }
 
     public Boolean checkCustomSeparator(String str) {
@@ -116,26 +118,21 @@ public class Application {
         Application calculator = new Application();
 
         String userInput;
-        double result;
+        BigDecimal result;
 
         userInput = Console.readLine();
 
         calculator.checkIllegalInput(userInput);
 
         if(userInput == "") {
-            result = 0.0;
+            result = BigDecimal.ZERO;
         }
         else {
             ArrayList<String> numList = calculator.splitString(userInput);
             result = calculator.calculate(numList);
         }
 
-        if(result % 1 == 0.0) {
-            System.out.println("결과 : " + (int)result);
-        }
-        else {
-            System.out.println("결과 : " + result);
-        }
+        System.out.println("결과 : " + result);
 
         Console.close();
     }
