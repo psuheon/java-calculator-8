@@ -2,7 +2,6 @@ package calculator;
 
 import camp.nextstep.edu.missionutils.Console;
 
-import java.awt.*;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -16,12 +15,12 @@ public class Application {
 
         userInput = Console.readLine();
 
-        if(userInput == "") {
+        if(userInput == "") { // 입력이 공백인 경우는 예외처리
             result = BigDecimal.ZERO;
         }
         else {
             calculator.checkIllegalInput(userInput);
-            if(userInput.length() == 5) { // 커스텀 구분자 지정 포맷 뒤에 공백이 오는 경우는 예외처리
+            if(userInput.length() == 5) { // 커스텀 구분자 지정 포맷 뒤에 공백이 오는 경우 예외처리
                 result = BigDecimal.ZERO;
             }
             else {
@@ -61,7 +60,7 @@ public class Application {
         return separated;
     }
 
-    // String 형식으로 된 숫자들을 Double 형식으로 바꾸어 더하는 함수
+    // String 형식으로 된 숫자들을 BigDecimal 형식으로 바꾸어 더하는 함수
     public BigDecimal calculate(ArrayList<String> nList) {
         BigDecimal sum = BigDecimal.ZERO;
 
@@ -73,6 +72,7 @@ public class Application {
         return sum;
     }
 
+    // 커스텀 구분자 사용 여부 판단 함수
     public Boolean checkCustomSeparator(String str) {
         if(Character.isDigit(str.charAt(0)))
             return Boolean.FALSE;
@@ -80,6 +80,7 @@ public class Application {
             return Boolean.TRUE;
     }
 
+    // 사용자 입력의 오류 판단 함수
     public void checkIllegalInput(String input) {
         int startIndex = 0;
         ArrayList<Character> separator = new ArrayList<>(Arrays.asList(',', ':'));
@@ -112,10 +113,10 @@ public class Application {
             }
         }
 
-
         int floatingPoint = 0;
         for(int i = startIndex; i < input.length(); i++) {
             char current = input.charAt(i);
+
             if(!Character.isDigit(current)) {
                 if(current =='.') {
                     if(floatingPoint == 0) {
@@ -126,15 +127,16 @@ public class Application {
                     }
                 }
                 else {
-                    int isSeparator = 0;
+                    Boolean isSeparator = Boolean.FALSE;
+
                     for(Character c : separator) {
                         if(current == c) {
-                            isSeparator = 1;
+                            isSeparator = Boolean.TRUE;
                             floatingPoint = 0;
                         }
                     }
 
-                    if(isSeparator == 0) { // 지정된 구분자가 아닌 다른 문자가 사용된 경우
+                    if(isSeparator == Boolean.FALSE) { // 지정된 구분자가 아닌 다른 문자가 사용된 경우
                         throw new IllegalArgumentException("잘못된 입력입니다.");
                     }
                     else {
@@ -145,6 +147,5 @@ public class Application {
                 }
             }
         }
-
     }
 }
