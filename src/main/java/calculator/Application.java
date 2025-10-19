@@ -8,6 +8,32 @@ import java.util.ArrayList;
 import java.util.Arrays;
 
 public class Application {
+    public static void main(String[] args) throws IllegalArgumentException {
+        Application calculator = new Application();
+
+        String userInput;
+        BigDecimal result;
+
+        userInput = Console.readLine();
+
+        if(userInput == "") {
+            result = BigDecimal.ZERO;
+        }
+        else {
+            calculator.checkIllegalInput(userInput);
+            if(userInput.length() == 5) { // 커스텀 구분자 지정 포맷 뒤에 공백이 오는 경우는 예외처리
+                result = BigDecimal.ZERO;
+            }
+            else {
+                ArrayList<String> numList = calculator.splitString(userInput);
+                result = calculator.calculate(numList);
+            }
+        }
+
+        System.out.println("결과 : " + result);
+
+        Console.close();
+    }
 
     // 유저가 입력한 문자열을 구분자를 기준으로 하여 숫자들로 나누는 함수
     public ArrayList<String> splitString(String str) {
@@ -77,8 +103,15 @@ public class Application {
             separator.add(input.charAt(2));
         }
 
-        if(!Character.isDigit(input.charAt(input.length() - 1))) // 숫자가 아닌 문자로 문자열이 끝나는 경우
-            throw new IllegalArgumentException("잘못된 입력입니다.");
+        if(!Character.isDigit(input.charAt(input.length() - 1))) {
+            if(input.length() == 5) { // 커스텀 구분자 지정 포맷 뒤에 공백이 오는 경우는 예외처리
+                return;
+            }
+            else{
+                throw new IllegalArgumentException("잘못된 입력입니다."); // 숫자가 아닌 문자로 문자열이 끝나는 경우
+            }
+        }
+
 
         int floatingPoint = 0;
         for(int i = startIndex; i < input.length(); i++) {
@@ -113,27 +146,5 @@ public class Application {
             }
         }
 
-    }
-    public static void main(String[] args) throws IllegalArgumentException {
-        Application calculator = new Application();
-
-        String userInput;
-        BigDecimal result;
-
-        userInput = Console.readLine();
-
-        calculator.checkIllegalInput(userInput);
-
-        if(userInput == "") {
-            result = BigDecimal.ZERO;
-        }
-        else {
-            ArrayList<String> numList = calculator.splitString(userInput);
-            result = calculator.calculate(numList);
-        }
-
-        System.out.println("결과 : " + result);
-
-        Console.close();
     }
 }
